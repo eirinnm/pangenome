@@ -11,3 +11,5 @@ export_report_text.py
 report_text.md
 reports/report_files
 __pycache__/
+/.quarto/
+/_site/
