@@ -14,14 +14,15 @@ execute:
 jupyter: python3
 ---
 # Introduction
-This report compared the results of differential gene expression analysis performed using a linear reference genome (TAIR10, Arabidopsis thaliana, accession Col-0) and a pangenome reference (constructed from 79 Arabidopsis accessions with geographic category "Asia" from the 1001 Genomes Project). 
-The RNA-seq experiment involved exposing plants from the Ara-1 accession (belonging to the Asia subpopulation) to drought stress and comparing gene expression between control and stressed conditions. The goal was to identify genes that were differentially expressed in the pangenome analysis but not in the linear genome analysis, as a means of highlighting the effect of reference bias and the value of utilising pangenomes for RNA-seq experiments.
+This report compares the results of differential gene expression analysis performed using a linear reference genome (TAIR10, Arabidopsis thaliana, accession Col-0) and a pangenome reference (constructed from 79 Arabidopsis accessions with geographic category "Asia" from the 1001 Genomes Project). 
+The RNA-seq experiment and dataset comes from [Bu et al, 2026](https://onlinelibrary.wiley.com/doi/10.1111/jipb.70231) and involved exposing plants from the Ara-1 accession (belonging to the Asia subpopulation) to drought stress and comparing gene expression between control and stressed conditions. The goal is to identify genes that were differentially expressed in the pangenome analysis but not in the linear genome analysis, as a means of highlighting the effect of reference bias and the value of utilising pangenomes for RNA-seq experiments.
+
 The pangenome was assembled using the TAIR10 reference genome together with variants from the 79 accessions. The coordinate system was the same as TAIR10.
 
-RNA-seq samples were downloaded from the SRA (BioProject PRJCA058957) from [Bu et al, 2026](https://onlinelibrary.wiley.com/doi/10.1111/jipb.70231) and aligned to both the linear and pangenome references using Hisat2. Read counts per gene and coverage metrics were obtained using StringTie, and differential expression analysis was performed using DESeq2 in R. The RNA-seq dataset was limited to 2 samples per condition, which restricted statistical power and the ability to detect significant DEGs, but this was sufficient for the purpose of demonstrating the impact of reference bias and the utility of pangenomes for RNA-seq analysis.
+RNA-seq samples were downloaded from the SRA (BioProject PRJCA058957) and aligned to both the linear and pangenome references using Hisat2. Read counts per gene and coverage metrics were obtained using StringTie, and differential expression analysis was performed using DESeq2 in R. The RNA-seq dataset was limited to 2 samples per condition, which restricted statistical power and the ability to detect significant DEGs, but this was sufficient for the purpose of demonstrating the impact of reference bias and the utility of pangenomes for RNA-seq analysis.
 
-The pipeline was implemented in Nextflow and is available on Github at: (url to be added). The pipeline ran on AWS Batch. Source files were on s3 at: (s3 path to be added). 
-Offline analysis and figure generation were performed in Python using Jupyter and Quarto, and the code was available in the `report.qmd` file in this directory.
+The pipeline was implemented in Nextflow and AWS Batch. [The pipeline and configuration is available on Github](https://github.com/eirinnm/pangenome/). 
+Offline analysis and figure generation were performed in Python using Jupyter and Quarto.
 
 ## Flowchart of the analysis pipeline
 
@@ -330,7 +331,7 @@ table_display.columns = [
 table_display
 ```
 
-Two of the genes in Table 1 with high rescue ratios and identified as DEGs only in the pangenome analysis (ERF6 and RTFL12) were known to be involved in stress responses. 
+Two of the genes in Table 1 with high rescue ratios and identified as DEGs only in the pangenome analysis (ERF6 and RTFL12) are known to be involved in stress responses. 
 
 * [ETHYLENE RESPONSE FACTOR6 Acts as a Central Regulator of Leaf Growth under Water-Limiting Conditions in Arabidopsis](https://pmc.ncbi.nlm.nih.gov/articles/PMC3641212/)
 * [Shade-induced RTFL/DVL peptides negatively regulate the shade response by directly interacting with BSKs in Arabidopsis](https://www.nature.com/articles/s41467-023-42618-3)
