@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Eirinn Mackay">
+
+<title>Graph pangenomes rescue reference bias and reveal additional differentially expressed genes in an Arabidopsis drought stress experiment</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="report_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="report_files/libs/quarto-html/popper.min.js"></script>
+<script src="report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="report_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="report_files/libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="report_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="report_files/libs/bootstrap/bootstrap-1ace4657fdea27f69f8215bdcdd43073.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="report_files/libs/bootstrap/bootstrap-dark-8d732dda91dc2cc8bc754f88c3c39fcd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="report_files/libs/bootstrap/bootstrap-1ace4657fdea27f69f8215bdcdd43073.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="report_files/libs/quarto-diagram/mermaid.min.js"></script>
+<script src="report_files/libs/quarto-diagram/mermaid-init.js"></script>
+<link href="report_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
+
+<main class="content column-page" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Graph pangenomes rescue reference bias and reveal additional differentially expressed genes in an Arabidopsis drought stress experiment</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Eirinn Mackay </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This report compared the results of differential gene expression analysis performed using a linear reference genome (TAIR10, Arabidopsis thaliana, accession Col-0) and a pangenome reference (constructed from 79 Arabidopsis accessions with geographic category “Asia” from the 1001 Genomes Project). The RNA-seq experiment involved exposing plants from the Ara-1 accession (belonging to the Asia subpopulation) to drought stress and comparing gene expression between control and stressed conditions. The goal was to identify genes that were differentially expressed in the pangenome analysis but not in the linear genome analysis, as a means of highlighting the effect of reference bias and the value of utilising pangenomes for RNA-seq experiments. The pangenome was assembled using the TAIR10 reference genome together with variants from the 79 accessions. The coordinate system was the same as TAIR10.</p>
+<p>RNA-seq samples were downloaded from the SRA (BioProject PRJCA058957) from <a href="https://onlinelibrary.wiley.com/doi/10.1111/jipb.70231">Bu et al, 2026</a> and aligned to both the linear and pangenome references using Hisat2. Read counts per gene and coverage metrics were obtained using StringTie, and differential expression analysis was performed using DESeq2 in R. The RNA-seq dataset was limited to 2 samples per condition, which restricted statistical power and the ability to detect significant DEGs, but this was sufficient for the purpose of demonstrating the impact of reference bias and the utility of pangenomes for RNA-seq analysis.</p>
+<p>The pipeline was implemented in Nextflow and is available on Github at: (url to be added). The pipeline ran on AWS Batch. Source files were on s3 at: (s3 path to be added). Offline analysis and figure generation were performed in Python using Jupyter and Quarto, and the code was available in the <code>report.qmd</code> file in this directory.</p>
+<section id="flowchart-of-the-analysis-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="flowchart-of-the-analysis-pipeline">Flowchart of the analysis pipeline</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div id="flowchart">
+<div>
+<pre class="mermaid mermaid-js" data-label="flowchart">flowchart TD
+    %% Inputs
+    SRA([RNA-seq reads&lt;br/&gt;from SRA])
+    FASTA([TAIR10&lt;br/&gt;FASTA])
+    GTF([Araport11&lt;br/&gt;GTF])
+    VCF([1001 Genomes&lt;br/&gt;VCF])
+    ACC([Accession&lt;br/&gt;list])
+
+    %% QC
+    SRA --&gt; FASTP["FASTP&lt;br/&gt;QC &amp; trimming"]
+
+    %% Linear reference branch
+    FASTA --&gt; HISAT2_INDEX["HISAT2&lt;br/&gt;Build linear index"]
+    GTF --&gt; HISAT2_INDEX
+
+    %% Pangenome reference branch
+    VCF --&gt; BCFTOOLS["BCFTOOLS&lt;br/&gt;Extract subpopulation variants"]
+    ACC --&gt; BCFTOOLS
+    FASTA --&gt; PAN_INDEX["HISAT2&lt;br/&gt;Build graph pangenome index"]
+    BCFTOOLS --&gt; PAN_INDEX
+    GTF --&gt; PAN_INDEX
+
+    %% Alignment (both references)
+    FASTP --&gt; ALIGN["HISAT2&lt;br/&gt;Align reads to genome"]
+    HISAT2_INDEX --&gt; ALIGN
+    PAN_INDEX --&gt; ALIGN
+
+    %% Downstream outputs
+    ALIGN --&gt; STRINGTIE["STRINGTIE&lt;br/&gt;Transcript quantification&lt;br/&gt;(TPM)"]
+    GTF --&gt; STRINGTIE
+    ALIGN --&gt; FC["FEATURECOUNTS&lt;br/&gt;Read counts per gene"]
+    GTF --&gt; FC
+
+    %% DESeq2
+    FC --&gt; DESEQ2["DESEQ2&lt;br/&gt;Differential expression&lt;br/&gt;(linear and pangenome)"]
+
+    %% Styling
+    classDef input fill:#d6eaf8,stroke:#2e86c1,color:#000
+    classDef process fill:#d5f5e3,stroke:#1e8449,color:#000
+    classDef output fill:#fdebd0,stroke:#ca6f1e,color:#000
+    class SRA,FASTA,GTF,VCF,ACC input
+    class FASTP,HISAT2_INDEX,BCFTOOLS,PAN_INDEX,ALIGN process
+    class STRINGTIE,FC,DESEQ2 output
+</pre>
+</div>
+<p>Flowchart illustrating the Nextflow pipeline for generating a graph pangenome from a list of accession numbers, followed by aligning RNA-seq reads and performing differential expression analysis.</p>
+</div>
+</div>
+</div>
+<div id="config-and-load" class="cell" data-cache="true" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dataloader <span class="im">import</span> (</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    load_gene_table,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    load_deseq_table,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    merge_deseq_tables,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    load_stringtie_coverage,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    calculate_coverage_rescue,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    fetch_coverage,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    fetch_exons,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># define paths to data files</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> <span class="st">"../data"</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>GENE_TABLE_PATH <span class="op">=</span> DATA_DIR <span class="op">+</span> <span class="st">"/TAIR10/ensembl_gene_names.txt"</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>DESEQ2_RESULTS_DIR <span class="op">=</span> DATA_DIR <span class="op">+</span> <span class="st">"/results/latest/deseq2/"</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>STRINGTIE_RESULTS_DIR <span class="op">=</span> DATA_DIR <span class="op">+</span> <span class="st">"/results/latest/stringtie/"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>CRAM_DIR <span class="op">=</span> DATA_DIR <span class="op">+</span> <span class="st">"/results/latest/cram/"</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>BIGWIG_DIR <span class="op">=</span> DATA_DIR <span class="op">+</span> <span class="st">"/results/latest/bigwig/"</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># specific definitions for this experiment</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>LINEAR_GENOME_NAME <span class="op">=</span> <span class="st">"TAIR10"</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>PANGENOME_NAME <span class="op">=</span> <span class="st">"asia"</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>TARGET_ACCESSION_NUM <span class="op">=</span> <span class="st">"10015"</span> <span class="co"># this is the ID for Ara-1 (Shahdara-1), the accession used in this experiment</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>TARGET_VARIANTS_VCF <span class="op">=</span> DATA_DIR <span class="op">+</span> <span class="ss">f"/VCF/accession_</span><span class="sc">{</span>TARGET_ACCESSION_NUM<span class="sc">}</span><span class="ss">.vcf.gz"</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>ANNOTATIONS_GTF <span class="op">=</span> DATA_DIR <span class="op">+</span> <span class="st">"/TAIR10/Araport11_GTF_genes_transposons.Mar202021.gtf.gz"</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># sample name and conditions for the rnaseq experiment (Ara-1 plants were exposed to drought stress)</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>SAMPLE_INFO <span class="op">=</span> [</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"sample_name"</span>: <span class="st">"A"</span>, <span class="st">"condition"</span>: <span class="st">"control"</span>},</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"sample_name"</span>: <span class="st">"B"</span>, <span class="st">"condition"</span>: <span class="st">"control"</span>},</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"sample_name"</span>: <span class="st">"C"</span>, <span class="st">"condition"</span>: <span class="st">"stressed"</span>},</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"sample_name"</span>: <span class="st">"D"</span>, <span class="st">"condition"</span>: <span class="st">"stressed"</span>}</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># load gene names from pregenerated table from ensembl biomart </span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>gene_table <span class="op">=</span> load_gene_table(GENE_TABLE_PATH)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"># load coverage values from stringtie results for both linear and pangenome analyses, then calculate coverage rescue ratios</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># (i.e. coverage in pangenome / coverage in linear genome) for each gene</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>coverage_df <span class="op">=</span> load_stringtie_coverage(STRINGTIE_RESULTS_DIR, SAMPLE_INFO, [LINEAR_GENOME_NAME, PANGENOME_NAME])</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>gene_rescue_df <span class="op">=</span> calculate_coverage_rescue(coverage_df, LINEAR_GENOME_NAME, PANGENOME_NAME)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co"># load deseq2 results for both linear and pangenome analyses, </span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co"># then generate merged table of DEGs with gene names and descriptions</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>linear_deseq <span class="op">=</span> load_deseq_table(<span class="ss">f"</span><span class="sc">{</span>DESEQ2_RESULTS_DIR<span class="sc">}{</span>LINEAR_GENOME_NAME<span class="sc">}</span><span class="ss">_deseq2_results.csv"</span>)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>pangenome_deseq <span class="op">=</span> load_deseq_table(<span class="ss">f"</span><span class="sc">{</span>DESEQ2_RESULTS_DIR<span class="sc">}{</span>PANGENOME_NAME<span class="sc">}</span><span class="ss">_deseq2_results.csv"</span>)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>de_table <span class="op">=</span> merge_deseq_tables(linear_deseq, pangenome_deseq, gene_table)</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we have coverage rescue ratios per gene and DEG status per gene.</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge into a single dataframe for analysis</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>complete_df <span class="op">=</span> gene_rescue_df.merge(de_table, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co"># column names are: ['mean_rescue', 'std_rescue', 'log2FoldChange_linear', 'padj_linear',</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="co">#    'log2FoldChange_pangenome', 'padj_pangenome', 'DEG_status', 'DE_linear', 'DE_pangenome',</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co">#    'Gene description', 'Gene name', 'Chromosome/scaffold name',</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co">#    'Gene start (bp)', 'Gene end (bp)']</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a> <span class="co"># for convenience, subset this to just DEGs</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>deg_df <span class="op">=</span> complete_df[complete_df[<span class="st">"DEG_status"</span>] <span class="op">!=</span> <span class="st">"neither"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="analysis" class="level1">
+<h1>Analysis</h1>
+<section id="differential-expression-counts" class="level2">
+<h2 class="anchored" data-anchor-id="differential-expression-counts">Differential Expression counts</h2>
+<div id="cell-fig-deg-counts" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># prepare data for plotting</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>status_counts <span class="op">=</span> deg_df[<span class="st">"DEG_status"</span>].value_counts().reset_index()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>status_counts.columns <span class="op">=</span> [<span class="st">"Category"</span>, <span class="st">"Count"</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># map internal names to display names if necessary</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>rename_dict <span class="op">=</span> {<span class="st">"both"</span>: <span class="st">"Both"</span>, <span class="st">"pangenome"</span>: <span class="st">"Pangenome"</span>, <span class="st">"linear"</span>: <span class="st">"Linear"</span>}</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>status_counts[<span class="st">"Category"</span>] <span class="op">=</span> status_counts[<span class="st">"Category"</span>].<span class="bu">map</span>(rename_dict)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># sort for consistent display</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>status_counts <span class="op">=</span> status_counts.set_index(<span class="st">"Category"</span>).loc[[<span class="st">"Both"</span>, <span class="st">"Pangenome"</span>, <span class="st">"Linear"</span>]].reset_index()</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># generate horizontal barplot</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `y` variable to `hue` and set `legend=False` for the same effect.</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sns.barplot(</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>status_counts, </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"Category"</span>, </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Category"</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"Count"</span>, </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>{<span class="st">"Both"</span>: <span class="st">"#4c72b0"</span>, <span class="st">"Pangenome"</span>: <span class="st">"#55a868"</span>, <span class="st">"Linear"</span>: <span class="st">"#c44e52"</span>},</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># add labels and title</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Number of Genes"</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">""</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Categorisation of Differentially Expressed Genes (DESeq2)"</span>)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co"># annotate bars with counts</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, count <span class="kw">in</span> <span class="bu">enumerate</span>(status_counts[<span class="st">"Count"</span>]):</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    ax.text(count <span class="op">+</span> <span class="dv">5</span>, i, <span class="bu">str</span>(count), va<span class="op">=</span><span class="st">'center'</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-deg-counts" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Bar plot showing the number of DEGs found in the linear analysis only (9), pangenome analysis only (23), and in both analyses (651).">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-deg-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="report_files/figure-html/fig-deg-counts-output-1.png" alt="Bar plot showing the number of DEGs found in the linear analysis only (9), pangenome analysis only (23), and in both analyses (651)." width="752" height="368" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-deg-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Counts of Differentially Expressed Genes (DEGs) by analysis category. ‘Pangenome’ and ‘Linear’ referred to genes found to be DE only in that specific analysis, while ‘Both’ referred to genes identified as DE in both analyses.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Genes were considered differentially expressed at adjusted p-value &lt; 0.05 using DESeq2 Wald tests. DESeq2 identified 651 differentially expressed genes (DEGs) in both sets of alignments (<a href="#fig-deg-counts" class="quarto-xref">Figure&nbsp;1</a>). An additional 23 DEGs were identified in the pangenome analysis and missed in the linear genome analysis, while only 9 DEGs were unique to the linear genome analysis. This suggested that the pangenome reference could recover alignment coverage for highly variant genes, potentially increasing sensitivity for differential expression detection.</p>
+</section>
+<section id="coverage-rescue" class="level2">
+<h2 class="anchored" data-anchor-id="coverage-rescue">Coverage Rescue</h2>
+<p>SNPs and indels in the target accession (Ara-1) would lead to reduced read coverage for those genes when aligning to the linear reference. By providing a better representation of the genetic diversity in the sample, the pangenome reference increased (rescued) coverage for highly variant genes.</p>
+<p>To demonstrate this, we calculated the log2 ratio of coverage in the pangenome alignment to coverage in the linear genome alignment for each gene. A positive value indicated that the pangenome provided increased aligned coverage for that gene compared to the linear reference. We then compared this rescue ratio across different categories of DEGs (those found in both analyses, those unique to the pangenome analysis, and those unique to the linear analysis) to see if there was a relationship between DEG status and coverage rescue.</p>
+<div id="cell-fig-rescue-stripplot" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define category order and palette to match Figure 1</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>category_order <span class="op">=</span> [<span class="st">"both"</span>, <span class="st">"pangenome"</span>, <span class="st">"linear"</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>rename_dict <span class="op">=</span> {<span class="st">"both"</span>: <span class="st">"Both"</span>, <span class="st">"pangenome"</span>: <span class="st">"Pangenome"</span>, <span class="st">"linear"</span>: <span class="st">"Linear"</span>}</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>color_palette <span class="op">=</span> {<span class="st">"both"</span>: <span class="st">"#4c72b0"</span>, <span class="st">"pangenome"</span>: <span class="st">"#55a868"</span>, <span class="st">"linear"</span>: <span class="st">"#c44e52"</span>}</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># generate stripplot</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sns.stripplot(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>deg_df,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"DEG_status"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"mean_rescue"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    order<span class="op">=</span>category_order,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"DEG_status"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>color_palette,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    jitter<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># add a horizontal line at 0 (no rescue)</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># add labels and title</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(<span class="bu">range</span>(<span class="bu">len</span>(category_order)))</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels([rename_dict[x] <span class="cf">for</span> x <span class="kw">in</span> category_order])</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"DEG Category"</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Mean log2(Rescue Ratio)"</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Coverage Rescue by DEG Category"</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-rescue-stripplot" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Strip plot showing the distribution of coverage rescue ratios for DEGs found in both analyses, only in the pangenome analysis, and only in the linear analysis. The mean, median and SD values were: Both: mean=0.034, sd=0.11, median=0.0016; Pangenome only: mean=0.52, sd=0.79, median=0.25; Linear only: mean=0.4, sd=0.79, median=0.17. The plot showed that DEGs found only in the pangenome analysis had the highest mean rescue ratio, followed by DEGs found only in the linear analysis, while DEGs found in both analyses had a mean rescue ratio close to zero. ">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rescue-stripplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="report_files/figure-html/fig-rescue-stripplot-output-1.png" alt="Strip plot showing the distribution of coverage rescue ratios for DEGs found in both analyses, only in the pangenome analysis, and only in the linear analysis. The mean, median and SD values were: Both: mean=0.034, sd=0.11, median=0.0016; Pangenome only: mean=0.52, sd=0.79, median=0.25; Linear only: mean=0.4, sd=0.79, median=0.17. The plot showed that DEGs found only in the pangenome analysis had the highest mean rescue ratio, followed by DEGs found only in the linear analysis, while DEGs found in both analyses had a mean rescue ratio close to zero. " width="753" height="560" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rescue-stripplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Coverage rescue ratio (log2(Pangenome/Linear)) for DEGs, categorised by their DEG status. Each point represented one gene (mean across all samples).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-rescue-stripplot" class="quarto-xref">Figure&nbsp;2</a> showed the distribution of coverage rescue ratios for DEGs in each category. DEGs found only in the pangenome analysis had the highest mean rescue ratio, followed by DEGs found only in the linear analysis, while DEGs found in both analyses had a mean rescue ratio close to zero. This suggested that the additional DEGs identified in the pangenome analysis were indeed benefiting from improved coverage due to the more representative reference, consistent with the hypothesis that reference bias contributed to reduced sensitivity in the linear-reference analysis.</p>
+</section>
+<section id="selected-genes-coverage-plots" class="level2">
+<h2 class="anchored" data-anchor-id="selected-genes-coverage-plots">Selected genes: Coverage Plots</h2>
+<p>The per-base coverage across the gene body for the top 6 genes with the highest rescue ratio (i.e.&nbsp;those that benefited most from the pangenome reference) was shown in <a href="#fig-coverage" class="quarto-xref">Figure&nbsp;3</a>. For each gene, coverage was plotted for both the linear and pangenome alignments, with annotated exons indicated as shaded regions. The plots showed localised coverage depletions in the linear alignments, while remaining high in the pangenome alignments. This illustrated how the pangenome reference could recover read depth coverage for highly variant genes, which could lead to improved detection of differential expression.</p>
+<p>Notably, gene ERF6 showed two loci with low coverage in the linear alignment that were rescued in the pangenome alignment, which likely contributed to it being identified as a DEG in the pangenome analysis but not in the linear analysis. This gene is known to be involved in drought stress response, so missing it due to reference bias would have had implications for the biological conclusions drawn from the experiment.</p>
+<div id="cell-fig-coverage" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>TOP_N_GENES <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>genes_to_plot <span class="op">=</span> deg_df[deg_df[<span class="st">"DEG_status"</span>] <span class="op">==</span> <span class="st">"pangenome"</span>].sort_values(by<span class="op">=</span><span class="st">"mean_rescue"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(TOP_N_GENES).index.tolist()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> mpatches</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>RESULTS_DIR <span class="op">=</span> DATA_DIR <span class="op">+</span> <span class="st">"/results/latest"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> <span class="st">"A"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>genome_colors <span class="op">=</span> {LINEAR_GENOME_NAME: <span class="st">"#c44e52"</span>, PANGENOME_NAME: <span class="st">"#55a868"</span>}</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>SUBPLOT_WRAP <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>SUBPLOT_WIDTH <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>SUBPLOT_HEIGHT <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="bu">len</span>(genes_to_plot) <span class="op">//</span> SUBPLOT_WRAP, SUBPLOT_WRAP, figsize<span class="op">=</span>(SUBPLOT_WIDTH <span class="op">*</span> SUBPLOT_WRAP, SUBPLOT_HEIGHT <span class="op">*</span> (<span class="bu">len</span>(genes_to_plot) <span class="op">//</span> SUBPLOT_WRAP)), sharey<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">len</span>(genes_to_plot) <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    axes <span class="op">=</span> [axes]</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, gene_id <span class="kw">in</span> <span class="bu">zip</span>(axes.flatten(), genes_to_plot):</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    gene_info <span class="op">=</span> gene_table.loc[gene_id]</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    chrom <span class="op">=</span> <span class="bu">str</span>(gene_info[<span class="st">"Chromosome/scaffold name"</span>])</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> <span class="bu">int</span>(gene_info[<span class="st">"Gene start (bp)"</span>]) <span class="op">-</span> <span class="dv">1</span>  <span class="co"># convert to 0-based</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    end <span class="op">=</span> <span class="bu">int</span>(gene_info[<span class="st">"Gene end (bp)"</span>])</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    gene_name <span class="op">=</span> gene_info.get(<span class="st">"Gene name"</span>, gene_id) <span class="cf">if</span> pd.notna(gene_info.get(<span class="st">"Gene name"</span>)) <span class="cf">else</span> gene_id</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot coverage for both genomes</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    display_names <span class="op">=</span> {LINEAR_GENOME_NAME: <span class="st">"Linear"</span>, PANGENOME_NAME: <span class="st">"Pangenome"</span>}</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> genome, color <span class="kw">in</span> genome_colors.items():</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        cov <span class="op">=</span> fetch_coverage(sample, genome, chrom, start, end, RESULTS_DIR)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> np.arange(start, start <span class="op">+</span> <span class="bu">len</span>(cov))</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        ax.plot(x, cov, label<span class="op">=</span>display_names[genome], color<span class="op">=</span>color, alpha<span class="op">=</span><span class="fl">0.85</span>, linewidth<span class="op">=</span><span class="fl">0.9</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># annotate exons as shaded bands</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    exons <span class="op">=</span> fetch_exons(chrom, start, end, ANNOTATIONS_GTF)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> exon_start, exon_end <span class="kw">in</span> exons:</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        ax.axvspan(exon_start <span class="op">-</span> <span class="dv">1</span>, exon_end, alpha<span class="op">=</span><span class="fl">0.15</span>, color<span class="op">=</span><span class="st">"steelblue"</span>, zorder<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"</span><span class="sc">{</span>gene_id<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>gene_name<span class="sc">}</span><span class="ss">)"</span> <span class="cf">if</span> gene_name <span class="op">!=</span> gene_id <span class="cf">else</span> gene_id)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Coverage"</span>)</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># manually compute an offset per subplot so tick labels stay small</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># capture offset by value in lambda default arg to avoid loop closure issue</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> matplotlib.ticker <span class="im">import</span> FuncFormatter</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    offset <span class="op">=</span> (start <span class="op">//</span> <span class="dv">1000</span>) <span class="op">*</span> <span class="dv">1000</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(FuncFormatter(<span class="kw">lambda</span> x, pos, o<span class="op">=</span>offset: <span class="ss">f'</span><span class="sc">{</span><span class="bu">int</span>(x <span class="op">-</span> o)<span class="sc">:,}</span><span class="ss">'</span>))</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="ss">f"Genomic Position (bp + </span><span class="sc">{</span>offset<span class="sc">:,}</span><span class="ss">)"</span>)</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># build legend: genomes + exon indicator</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ax <span class="op">==</span> axes.flatten()[<span class="dv">0</span>]:</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>        genome_handles <span class="op">=</span> [mpatches.Patch(color<span class="op">=</span>c, label<span class="op">=</span>display_names[g]) <span class="cf">for</span> g, c <span class="kw">in</span> genome_colors.items()]</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        exon_patch <span class="op">=</span> mpatches.Patch(color<span class="op">=</span><span class="st">"steelblue"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, label<span class="op">=</span><span class="st">"Exon"</span>)</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>        ax.legend(handles<span class="op">=</span>genome_handles <span class="op">+</span> [exon_patch], fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="ss">f"Coverage for Genes of Interest (Representative Control Sample)"</span>, fontsize<span class="op">=</span><span class="dv">13</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-coverage" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A grid of line plots showing per-base read coverage across the gene body for the top 6 genes from Table 1 (those with the highest rescue ratio), for a control sample. Each plot had two lines, one for the linear genome alignment (in red) and one for the pangenome alignment (in green). Grey shaded regions indicated annotated exons. The x-axis showed genomic position in base pairs, and the y-axis showed coverage. The plots showed that coverage dropped at various locations in the linear alignments, while remaining high in the pangenome alignments. This illustrated how the pangenome reference could recover read depth coverage for highly variant genes, which could lead to improved detection of differential expression.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="report_files/figure-html/fig-coverage-output-1.png" alt="A grid of line plots showing per-base read coverage across the gene body for the top 6 genes from Table 1 (those with the highest rescue ratio), for a control sample. Each plot had two lines, one for the linear genome alignment (in red) and one for the pangenome alignment (in green). Grey shaded regions indicated annotated exons. The x-axis showed genomic position in base pairs, and the y-axis showed coverage. The plots showed that coverage dropped at various locations in the linear alignments, while remaining high in the pangenome alignments. This illustrated how the pangenome reference could recover read depth coverage for highly variant genes, which could lead to improved detection of differential expression." width="961" height="883" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Per-base read coverage (control sample) across the gene body for the top 6 genes from Table 1. Grey shaded regions indicated annotated exons. Coverage was shown for both the linear (TAIR10) and pangenome (Asia) alignments.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="table-differentially-expressed-genes-rescued-by-the-pangenome-reference" class="level2">
+<h2 class="anchored" data-anchor-id="table-differentially-expressed-genes-rescued-by-the-pangenome-reference">Table: differentially-expressed genes rescued by the pangenome reference</h2>
+<div class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pangenome_only_degs <span class="op">=</span> deg_df[deg_df[<span class="st">"DEG_status"</span>] <span class="op">==</span> <span class="st">"pangenome"</span>]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># select and rename columns for readability</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>table_display <span class="op">=</span> pangenome_only_degs[[</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Gene name"</span>, </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Gene description"</span>, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mean_rescue"</span>, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"log2FoldChange_pangenome"</span>, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"log2FoldChange_linear"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>]].sort_values(by<span class="op">=</span><span class="st">"mean_rescue"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>table_display.columns <span class="op">=</span> [</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Gene Name"</span>, </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Description"</span>, </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rescue Ratio (log2)"</span>, </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LFC (Pangenome)"</span>, </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LFC (Linear)"</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># display the table</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>table_display</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-pangenome-degs" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pangenome-degs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Differentially expressed genes identified exclusively in the pangenome analysis. Rescue ratio represented the log2 ratio of pangenome to linear coverage.
+</figcaption>
+<div aria-describedby="tbl-pangenome-degs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Gene Name</th>
+<th data-quarto-table-cell-role="th">Description</th>
+<th data-quarto-table-cell-role="th">Rescue Ratio (log2)</th>
+<th data-quarto-table-cell-role="th">LFC (Pangenome)</th>
+<th data-quarto-table-cell-role="th">LFC (Linear)</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Gene ID</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT1G65190</th>
+<td>AT1G65190</td>
+<td>Protein kinase superfamily protein</td>
+<td>2.608373</td>
+<td>1.673633</td>
+<td>2.018758</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT4G13395</th>
+<td>RTFL12</td>
+<td>ROTUNDIFOLIA like 12</td>
+<td>2.495470</td>
+<td>-6.485844</td>
+<td>-4.914072</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT1G32920</th>
+<td>AT1G32920</td>
+<td>uncharacterized protein</td>
+<td>1.908578</td>
+<td>-2.119675</td>
+<td>-1.778556</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT5G44580</th>
+<td>AT5G44580</td>
+<td>uncharacterized protein</td>
+<td>1.390848</td>
+<td>1.351145</td>
+<td>1.176345</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT4G17490</th>
+<td>ERF6</td>
+<td>ethylene responsive element binding factor 6</td>
+<td>0.784680</td>
+<td>-2.554554</td>
+<td>-2.725922</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT1G24010</th>
+<td>AT1G24010</td>
+<td>Polyketide cyclase/dehydrase and lipid transpo...</td>
+<td>0.475825</td>
+<td>-1.623279</td>
+<td>-1.604131</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT3G15630</th>
+<td>AT3G15630</td>
+<td>plant/protein</td>
+<td>0.433201</td>
+<td>-1.700056</td>
+<td>-1.554511</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT2G23060</th>
+<td>AT2G23060</td>
+<td>Acyl-CoA N-acyltransferases (NAT) superfamily ...</td>
+<td>0.319675</td>
+<td>-2.108106</td>
+<td>-2.058802</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT4G17250</th>
+<td>AT4G17250</td>
+<td>uncharacterized protein</td>
+<td>0.315956</td>
+<td>2.022042</td>
+<td>1.853234</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT3G26180</th>
+<td>CYP71B20</td>
+<td>cytochrome P450, family 71, subfamily B, polyp...</td>
+<td>0.305683</td>
+<td>1.969141</td>
+<td>1.737280</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT5G15350</th>
+<td>ENODL17</td>
+<td>early nodulin-like protein 17</td>
+<td>0.283788</td>
+<td>-1.384006</td>
+<td>-1.347158</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT3G19380</th>
+<td>PUB25</td>
+<td>plant U-box 25</td>
+<td>0.255753</td>
+<td>1.993254</td>
+<td>1.838304</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT1G33110</th>
+<td>AT1G33110</td>
+<td>MATE efflux family protein</td>
+<td>0.247012</td>
+<td>1.518846</td>
+<td>1.650139</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT5G54710</th>
+<td>AT5G54710</td>
+<td>Ankyrin repeat family protein</td>
+<td>0.166675</td>
+<td>2.541447</td>
+<td>2.766717</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT5G13720</th>
+<td>AT5G13720</td>
+<td>Uncharacterized protein family (UPF0114)</td>
+<td>0.157623</td>
+<td>2.012235</td>
+<td>2.131043</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT2G41480</th>
+<td>AT2G41480</td>
+<td>peroxidase superfamily protein</td>
+<td>0.107312</td>
+<td>2.218389</td>
+<td>2.220030</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT2G13350</th>
+<td>AT2G13350</td>
+<td>Calcium-dependent lipid-binding (CaLB domain) ...</td>
+<td>0.074935</td>
+<td>2.405761</td>
+<td>2.469696</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT1G67360</th>
+<td>AT1G67360</td>
+<td>Rubber elongation factor protein (REF)</td>
+<td>0.015097</td>
+<td>1.108901</td>
+<td>1.103705</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT1G19320</th>
+<td>AT1G19320</td>
+<td>Pathosis-related thaumatin superfamily protein</td>
+<td>0.001973</td>
+<td>-1.657411</td>
+<td>-1.654822</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT3G21080</th>
+<td>AT3G21080</td>
+<td>ABC transporter-like protein</td>
+<td>0.000107</td>
+<td>3.050545</td>
+<td>3.104034</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT2G44560</th>
+<td>GH9B11</td>
+<td>glycosyl hydrolase 9B11</td>
+<td>0.000000</td>
+<td>5.986863</td>
+<td>5.837914</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AT1G64940</th>
+<td>CYP89A6</td>
+<td>cytochrome P450, family 87, subfamily A, polyp...</td>
+<td>-0.059263</td>
+<td>2.322971</td>
+<td>3.101729</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AT3G54800</th>
+<td>AT3G54800</td>
+<td>Pleckstrin homology (PH) and lipid-binding STA...</td>
+<td>-0.100764</td>
+<td>1.756402</td>
+<td>1.650321</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Two of the genes in Table 1 with high rescue ratios and identified as DEGs only in the pangenome analysis (ERF6 and RTFL12) were known to be involved in stress responses.</p>
+<ul>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3641212/">ETHYLENE RESPONSE FACTOR6 Acts as a Central Regulator of Leaf Growth under Water-Limiting Conditions in Arabidopsis</a></li>
+<li><a href="https://www.nature.com/articles/s41467-023-42618-3">Shade-induced RTFL/DVL peptides negatively regulate the shade response by directly interacting with BSKs in Arabidopsis</a></li>
+</ul>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<p>This analysis demonstrates that a graph pangenome reference can alter downstream RNA-seq differential expression results by recovering alignment coverage for highly variable genes. Compared with the linear TAIR10 reference, the pangenome analysis identified additional candidate differentially expressed genes (DEGs), many of which showed increased read coverage in the graph-based alignments. These findings are consistent with the known effects of reference bias, where sequence divergence between the sample and reference genome reduces mapping efficiency and affects downstream quantification.</p>
+<p>Genes identified exclusively in the pangenome analysis generally exhibited higher coverage rescue ratios than genes detected in both analyses, supporting the hypothesis that improved alignment sensitivity contributed to their detection. Per-base coverage plots showed localised coverage depletion in the linear alignments that was reduced or absent in the pangenome alignments. This effect was particularly evident for ERF6, a known drought-response gene, where multiple low-coverage regions in the linear alignment were rescued in the graph alignment.</p>
+<p>Some genes identified exclusively in the linear analysis also showed elevated rescue ratios, indicating that improved coverage alone does not fully determine DEG status. Differential expression significance also depends on dispersion estimates, replicate variability, and statistical thresholding. Given the small sample size used here (two replicates per condition), the additional DEGs identified in the pangenome analysis should therefore be interpreted as candidate rescued genes rather than definitive true positives.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

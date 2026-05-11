@@ -1,0 +1,13 @@
+nextflow.secrets.config
+.nextflow/
+.nextflow.log*
+test_data
+deprecated
+data
+nextflow/results
+.jupyter_cache
+report.quarto*
+export_report_text.py
+report_text.md
+reports/report_files
+__pycache__/
