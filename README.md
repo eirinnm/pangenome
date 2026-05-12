@@ -12,6 +12,10 @@ The analysis compares DGE results between:
 
 The study uses an RNA-seq dataset from [Bu et al, 2026](https://onlinelibrary.wiley.com/doi/10.1111/jipb.70231) involving drought stress response in the Ara-1 (Shahdara-1) accession.
 
+## Link to report
+
+https://eirinnm.github.io/pangenome/
+
 ## Pipeline Architecture
 
 The analysis is automated using a Nextflow pipeline that handles reference preparation, QC, alignment, and quantification.
