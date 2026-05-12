@@ -1,5 +1,7 @@
 # Pangenome RNA-seq Analysis
 
+*Link to Quarto report: https://eirinnm.github.io/pangenome/*
+
 This repository contains a Nextflow pipeline and analysis tools to investigate the impact of reference bias in RNA-seq experiments by comparing a linear reference (TAIR10) and a graph-based pangenome reference.
 
 The project demonstrates how a pangenome reference can rescue read coverage for highly variant genes, leading to more sensitive differential gene expression (DGE) analysis in *Arabidopsis thaliana*.
@@ -11,10 +13,6 @@ The analysis compares DGE results between:
 2.  **Pangenome Reference**: A graph-based index constructed from TAIR10 and variants from 79 Asian accessions of the 1001 Genomes Project.
 
 The study uses an RNA-seq dataset from [Bu et al, 2026](https://onlinelibrary.wiley.com/doi/10.1111/jipb.70231) involving drought stress response in the Ara-1 (Shahdara-1) accession.
-
-## Link to report
-
-https://eirinnm.github.io/pangenome/
 
 ## Pipeline Architecture
 
