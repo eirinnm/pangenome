@@ -1,4 +1,4 @@
-# Biographica: Pangenome RNA-seq Analysis
+# Pangenome RNA-seq Analysis
 
 This repository contains a Nextflow pipeline and analysis tools to investigate the impact of reference bias in RNA-seq experiments by comparing a linear reference (TAIR10) and a graph-based pangenome reference.
 
