@@ -9,6 +9,7 @@ include { TO_CRAM; BAM_TO_BIGWIG } from './modules/cram_and_bigwig.nf'
 include { STRINGTIE } from './modules/stringtie.nf'
 include { FEATURECOUNTS } from './modules/featurecounts.nf'
 include { DESEQ2 } from './modules/deseq2.nf'
+include { MULTIQC } from './modules/multiqc.nf'
 
 params.samplesheet         = "${params.data_dir}/samplesheet.csv"
 params.linear_fasta    = null
@@ -88,7 +89,7 @@ workflow {
         reads: tuple(sample, cond, r1, r2)
         ref:   tuple(ref, idx)
     }.set { split_ch }
-    sorted_bams = ALIGN_AND_SORT(split_ch.reads, split_ch.ref)
+    sorted_bams = ALIGN_AND_SORT(split_ch.reads, split_ch.ref).bam
 
     /*
      * Generate CRAM and BigWig files for JBrowse
@@ -115,6 +116,15 @@ workflow {
      */
     DESEQ2(counts_matrix, file(params.samplesheet, checkIfExists: true))
 
-    
+    /*
+     * MultiQC: collect all QC outputs and generate report
+     */
+    all_qc_ch = FASTP.out.json
+        .mix(ALIGN_AND_SORT.out.hisat2_log)
+        .mix(ALIGN_AND_SORT.out.flagstat)
+        .collect()
+
+    MULTIQC(all_qc_ch)
+
 }
 

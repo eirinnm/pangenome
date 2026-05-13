@@ -8,7 +8,9 @@ process ALIGN_AND_SORT {
     tuple val(ref_name), path(index_files)
 
     output:
-    tuple val(sample), val(condition), val(ref_name), path("${sample}_${ref_name}.sorted.bam"), path("${sample}_${ref_name}.sorted.bam.bai")
+    tuple val(sample), val(condition), val(ref_name), path("${sample}_${ref_name}.sorted.bam"), path("${sample}_${ref_name}.sorted.bam.bai"), emit: bam
+    path "${sample}_${ref_name}.hisat2.log", emit: hisat2_log
+    path "${sample}_${ref_name}.flagstat.txt", emit: flagstat
 
     script:
     def index_base = index_files[0].name.split('\\.')[0]
@@ -23,9 +25,13 @@ process ALIGN_AND_SORT {
         --min-intronlen 20 \
         --max-intronlen ${params.max_intronlen} \
         -1 $r1 -2 $r2 \
+        2> ${sample}_${ref_name}.hisat2.log \
         | samtools view -@ ${task.cpus} -bS - \
         | samtools sort -@ ${task.cpus} -o ${sample}_${ref_name}.sorted.bam -
 
     samtools index ${sample}_${ref_name}.sorted.bam
+
+    samtools flagstat -@ ${task.cpus} ${sample}_${ref_name}.sorted.bam \
+        > ${sample}_${ref_name}.flagstat.txt
     """
 }

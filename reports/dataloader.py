@@ -124,3 +124,68 @@ def fetch_exons(chrom: str, start: int, end: int, gtf_path: str) -> list:
         except ValueError:
             pass
     return exons
+
+def load_multiqc_stats(multiqc_dir: str, ref_names: list) -> pd.DataFrame:
+    """
+    Load alignment QC metrics from a MultiQC output directory.
+
+    Parses multiqc_general_stats.txt and returns a tidy DataFrame with one row
+    per (sample, reference) combination. Column detection uses substring matching
+    to remain robust to MultiQC version differences in column name prefixes.
+
+    Parameters
+    ----------
+    multiqc_dir : str
+        Path to the directory containing multiqc_data/.
+    ref_names : list of str
+        Reference suffixes used in file names (e.g. ['TAIR10', 'asia']).
+        Used to split the MultiQC sample name into sample_id and ref.
+
+    Returns
+    -------
+    pd.DataFrame
+        Columns: sample, ref, alignment_rate, pct_mapped, pct_properly_paired.
+        Rows with no recognised ref suffix (e.g. fastp-only rows) are excluded.
+    """
+    stats_path = f"{multiqc_dir}/multiqc_data/multiqc_general_stats.txt"
+    df = pd.read_csv(stats_path, sep="\t")
+
+    # Identify columns by keyword substring (case-insensitive)
+    def _find_col(df, *keywords):
+        cols = df.columns.str.lower()
+        for kw in keywords:
+            matches = [c for c in df.columns if kw.lower() in c.lower()]
+            if matches:
+                return matches[0]
+        return None
+
+    alignment_rate_col   = _find_col(df, "overall_alignment_rate", "alignment_rate")
+    pct_mapped_col       = _find_col(df, "reads_mapped_percent", "mapped_passed", "pct_mapped")
+    pct_paired_col       = _find_col(df, "properly_paired_pct", "properly_paired_percent", "properly_paired")
+
+    # Split 'Sample' column: e.g. 'A_TAIR10' → sample='A', ref='TAIR10'
+    # Sort ref_names longest-first to avoid partial matches
+    sorted_refs = sorted(ref_names, key=len, reverse=True)
+
+    def _split_sample(name):
+        for ref in sorted_refs:
+            if name.endswith(f"_{ref}"):
+                return name[: -(len(ref) + 1)], ref
+        return name, None
+
+    df[["sample_id", "ref"]] = pd.DataFrame(
+        df["Sample"].apply(_split_sample).tolist(), index=df.index
+    )
+
+    # Keep only rows that matched a known reference
+    df = df[df["ref"].notna()].copy()
+
+    result = pd.DataFrame({"sample": df["sample_id"], "ref": df["ref"]})
+    if alignment_rate_col:
+        result["alignment_rate"] = pd.to_numeric(df[alignment_rate_col], errors="coerce")
+    if pct_mapped_col:
+        result["pct_mapped"] = pd.to_numeric(df[pct_mapped_col], errors="coerce")
+    if pct_paired_col:
+        result["pct_properly_paired"] = pd.to_numeric(df[pct_paired_col], errors="coerce")
+
+    return result.reset_index(drop=True)
